@@ -1,25 +1,45 @@
 /* Estilo para el contenedor principal */
-.main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+.main-container{
+    background-color: black;
+    
+    
 }
-
+.gene{
+    display: inline-flex;
+    margin-left: 10px;
+    
+}
+.center-container{
+    background: rgba(56, 38, 38, 0.963);
+    color: white;
+    margin-left: 330px;
+    border-radius: 10px;
+    width: 79%;   
+    min-height: 711px;
+}
+.icon{
+       width: 5%;
+       margin-right: 10px;
+       margin-left: 10px;
+       border-radius: 50%;
+}
 /* Estilo para el contenedor de búsqueda */
 .search-container {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    width: 100%;
+    background-color: rgb(90, 34, 158)
 }
 
 /* Estilo para el campo de entrada de búsqueda */
 .search-input {
-    padding: 10px;
-    width: 300px;
+    padding: 20px;
+    width: 30%;
     font-size: 16px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 90px;
+
 }
 
 /* Estilo para el botón de búsqueda */
@@ -38,15 +58,16 @@
 .results-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
+    margin-left: 10px;
+    
 }
 
 /* Estilo para la tarjeta de resultado */
 .result-card {
-    border: 1px solid #ccc;
     border-radius: 4px;
     padding: 10px;
-    max-width: 200px;
+    max-width: 300px;
 }
 
 /* Estilo para la imagen del resultado */
@@ -62,4 +83,41 @@
     margin-top: 10px;
     font-size: 16px;
     text-align: center;
+}
+
+/* Contenedor de medio */
+.asi{
+    position: fixed;
+    float: left;
+    width: 20%;
+    height: 100vh;
+    background-color: #231f1f;
+    padding: var(--padding);
+}
+
+.asi .menu{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.asi .menu a{
+    text-decoration: none;
+    padding: 10px 1rem;
+    color: #c5c5c5;
+    font-weight: bold;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.asi .menu a span{
+    margin-right: 8px;
+}
+.asi .menu a.active{
+    background-color: #282828;
+    border-radius: 5px;
+    color: #ffffff;
+}
+.asi .menu a:hover{
+    color: #ffffff;
 }

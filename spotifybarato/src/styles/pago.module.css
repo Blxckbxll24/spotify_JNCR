@@ -5,7 +5,7 @@
 .Cabecilla{
     background-color:#2b5ac0 ;
     color:white;
-    padding: 23px;
+    padding: 15px;
 }
 .Idioma{
     margin-left: 25px;
@@ -21,7 +21,8 @@
 }
 .Logo{
     border-radius: 200px;
-    width: 90px;
+    width: 70px;
+    height: 70px;
 }
 .App{
     margin-top: 25px;
@@ -79,11 +80,37 @@
     font-weight: lighter;
     font-size: 14px;
     display: flex;
+    
 }
 .Par2{
 
-    color: black;   
+    color: black;
+    padding-left: 2%;   
 }
 .Par3{
     font-weight: lighter;
+}
+.pay{
+    padding-left: 40%;
+    width: 100px;
+    padding-top: 4%;
+}
+.arr{
+    background-color: white;
+    padding-top: 1%;
+    color: black;
+}
+.arr h3{
+    background-color: white;
+    color: black;
+    padding-left: 39%;
+}
+ .suscribcion .perfil .circulo{
+    background-color: #710563;
+    border-radius: %;
+    width: 100px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

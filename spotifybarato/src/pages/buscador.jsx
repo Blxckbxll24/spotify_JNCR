@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/buscador.css';
+import { Link } from 'react-router-dom';
 
 const CLIENT_ID = "453d6c17658a4a4a8498f17cb1b22b75";
 const CLIENT_SECRET = "6d243006672b46cea52da45f4fa7b0f7";
@@ -11,10 +12,18 @@ function Buscador() {
     const [results, setResults] = useState({});
     const [genres, setGenres] = useState([]);
     const [showGenres, setShowGenres] = useState(true);
+    const [showResults, setShowResults] = useState(false); // Nuevo estado
 
     useEffect(() => {
-        getGenres();
+        // Recuperar géneros desde el almacenamiento local
+        const storedGenres = localStorage.getItem('storedGenres');
+        if (storedGenres) {
+            setGenres(JSON.parse(storedGenres));
+        } else {
+            getGenres();
+        }
     }, []);
+
 
     const getGenres = () => {
         if (!accessToken) {
@@ -30,9 +39,16 @@ function Buscador() {
         };
 
         fetch('https://api.spotify.com/v1/recommendations/available-genre-seeds', genreParameters)
-            .then(response => response.json())
-            .then(data => setGenres(data.genres));
-    }
+        .then(response => response.json())
+        .then(data => {
+            setGenres(data.genres);
+            // Almacenar géneros en el almacenamiento local
+            localStorage.setItem('storedGenres', JSON.stringify(data.genres));
+            // Mostrar los géneros al cargar
+            setShowGenres(true);
+        });
+}
+
 
     useEffect(() => {
         var authParameters = {
@@ -54,11 +70,12 @@ function Buscador() {
     async function search() {
         if (!accessToken || searchInput.trim() === "") {
             setResults({});
-            setShowGenres(true);
+            setShowResults(false); // Ocultar resultados cuando no hay búsqueda
+            setShowGenres(true); // Mostrar géneros en lugar de resultados
             return;
         }
-
-        setShowGenres(false);
+        setShowResults(true); // Mostrar resultados cuando se realiza una búsqueda
+        setShowGenres(false); // Ocultar géneros
 
         // Resto del código de búsqueda
         var searchParameters = {
@@ -90,81 +107,96 @@ function Buscador() {
 
     return (
         <div className="main-container">
-            <div className="search-container">
-                <input
-                    type="input"
-                    className="search-input"
-                    placeholder='Search for artists, songs, albums, or playlists'
-                    value={searchInput}
-                    onChange={event => setSearchInput(event.target.value)}
-                />
-            </div>
-            <div className="results-container">
+            <aside className='asi'>
+                <div className="menu">
+                    <Link className="active" to="/inicio"><span><img src={require('../images/home.svg')} alt="" /></span>Inicio</Link>
+                    <Link to=''><span><img src={require('../images/search.svg')} alt="" /></span>Buscar</Link>
+                    <Link to="#"><span><img src={require('../images/library.svg')} alt="" /></span>Tu biblioteca</Link> <br />
+                    <Link to="#"><span><img src={require('../images/add.svg')} alt="" /></span>Crear lista</Link>
+                    <Link to="#"><span><img src={require('../images/heart.svg')} alt="" /></span>Canciones que te gustan</Link>
+                </div>
+            </aside>
+            <div className="center-container">
+                <div className="search-container">
+                    <section class="middle-section">
+                        <Link to='/inicio'><span><img className='icon' src={require('../images/simbolo-menor-que.jpeg')} alt="" placeholder='volver' title='Volver'/></span></Link>
+                        <Link to=''><span><img className='icon' src={require('../images/mayor-que-el-simbolo.jpeg')} alt="" placeholder='Avanzar' title='Avanzar'/></span></Link>        
+                        <input type="input" className="search-input" placeholder='¿Qué gustas escuchar?' value={searchInput} onChange={event => setSearchInput(event.target.value)} />
+                    </section>
+                </div>
+
+        
+                <div className="results-container">
                 {showGenres && genres.map((genre, index) => (
                     <div className="result-card" key={index}>
                         <p className="result-title">{genre}</p>
                     </div>
                 ))}
-            </div>
+                </div>
+                <div className="gene">
+                <div className="results-container">
+                    <div className="result-row">
+                        <h2>Artistas</h2>
+                        {results.artists && results.artists.map((result, i) => (
+                            <div className="result-card" key={i}>
+                                <img
+                                    className="result-image"
+                                    src={result.images?.[0]?.url || sinFotoImage}
+                                    alt={result.name}
+                                />
+                                <p className="result-title">{result.name}</p>
+                            </div>
+                        ))}
+                    </div>
+                            
+                    <div className="result-row">
+                        <h2>Canciones</h2>
+                        {results.songs && results.songs.map((result, i) => (
+                            <div className="result-card" key={i}>
+                                <img
+                                    className="result-image"
+                                    src={result.album?.images?.[0]?.url || sinFotoImage}
+                                    alt={result.name}
+                                />
+                                <p className="result-title">{result.name}</p>
+                            </div>
+                        ))}
+                    </div>
 
-            <div className="results-container">
-                <div className="result-row">
-                    <h2>Artists</h2>
-                    {results.artists && results.artists.map((result, i) => (
-                        <div className="result-card" key={i}>
-                            <img
-                                className="result-image"
-                                src={result.images?.[0]?.url || sinFotoImage}
-                                alt={result.name}
-                            />
-                            <p className="result-title">{result.name}</p>
-                        </div>
+                    <div className="result-row">
+                        <h2>Álbumes</h2>
+                        {results.albums && results.albums.map((result, i) => (
+                            <div className="result-card" key={i}>
+                                <img
+                                    className="result-image"
+                                    src={result.images?.[0]?.url || sinFotoImage}
+                                    alt={result.name}
+                                />
+                                <p className="result-title">{result.name}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="result-row">
+                        <h2>Listas de reproducción</h2>
+                        {results.playlists && results.playlists.map((result, i) => (
+                            <div className="result-card" key={i}>
+                                <img
+                                    className="result-image"
+                                    src={result.images?.[0]?.url || sinFotoImage}
+                                    alt={result.name}
+                                />
+                                <p className="result-title">{result.name}</p>
+                            </div>
+
                     ))}
                 </div>
-
-                <div className="result-row">
-                    <h2>Songs</h2>
-                    {results.songs && results.songs.map((result, i) => (
-                        <div className="result-card" key={i}>
-                            <img
-                                className="result-image"
-                                src={result.album?.images?.[0]?.url || sinFotoImage}
-                                alt={result.name}
-                            />
-                            <p className="result-title">{result.name}</p>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="result-row">
-                    <h2>Albums</h2>
-                    {results.albums && results.albums.map((result, i) => (
-                        <div className="result-card" key={i}>
-                            <img
-                                className="result-image"
-                                src={result.images?.[0]?.url || sinFotoImage}
-                                alt={result.name}
-                            />
-                            <p className="result-title">{result.name}</p>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="result-row">
-                    <h2>Playlists</h2>
-                    {results.playlists && results.playlists.map((result, i) => (
-                        <div className="result-card" key={i}>
-                            <img
-                                className="result-image"
-                                src={result.images?.[0]?.url || sinFotoImage}
-                                alt={result.name}
-                            />
-                            <p className="result-title">{result.name}</p>
-                        </div>
-                    ))}
                 </div>
             </div>
         </div>
+        </div>
+        
+        
     );
 }
 
